@@ -1,50 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:kuis/Info.dart';
+import 'package:kuis/app_store.dart';
+import 'package:kuis/Detail.dart';
 
-import 'app_store.dart';
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text('IF PlayStore'),
+        title: const Text('Flutter App Store'),
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
-          final AppStore store = appList[index];
-          return Card(
-              child: Row(
-            children: [
-              Container(
-                child: Image.network(
-                  store.imageLogo,
-                  width: 100,
-                ),
-              ),
-              Column(
+          final AppStore app = appList[index];
+          return new GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AppDetail(detailApp: app)));
+              },
+              child: Card(
+                  child: Row(
                 children: [
-                  Container(
-                    child: Text(store.name),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      app.imageLogo,
+                      height: 105,
+                      width: 105,
+                    ),
                   ),
-                  Container(
-                    child: Text(store.genre),
-                  )
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              direction: Axis.vertical,
+                              spacing: 10, // <-- Spacing between children
+                              children: <Widget>[
+                                Text(app.name,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text(app.genre,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black.withOpacity(0.6))),
+                                Wrap(
+                                    direction: Axis.horizontal,
+                                    spacing: 8,
+                                    children: [
+                                      Text(app.rating,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black
+                                                  .withOpacity(0.6))),
+                                    ]),
+                              ],
+                            )
+                          ])),
                 ],
-              ),
-            ],
-          ));
+              )));
         },
         itemCount: appList.length,
       ),
-    ));
+    );
   }
 }
